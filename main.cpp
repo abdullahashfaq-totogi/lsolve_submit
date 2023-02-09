@@ -11,21 +11,15 @@ int main() {
     // Reading Matrix A
     CSC<matrix_dtype> L_csc;
     Mtx2CSC_vec(L_mtx, L_csc, false, false);
-//    cout << "Verifying that matrix read correctly ..." << endl;
-//    L_csc.print();
 
     /*
-     *
      * Solving Using the Sample lsolve function
-     *
      * */
 
 
     // Reading B vector
     COO_ptr<matrix_dtype> lsolve_b;
     Mtx2Matrix(b_mtx, lsolve_b);
-//    print_matrix(lsolve_b);
-
 
     //Solving
     cout << " ############ Solution-Simple ############ \n" << endl;
@@ -34,7 +28,6 @@ int main() {
     auto end = std::chrono::high_resolution_clock::now();
     auto lsolve_time = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
     cout << "lsolve-simple completed - Time: " << lsolve_time<< " ms "  << endl;
-//    print_array(lsolve_b.data, lsolve_b.n_row);
 
     /*
      * Solving Using the lsolve where zeros are skipped
@@ -43,8 +36,6 @@ int main() {
     // Reading B vector
     COO_ptr<matrix_dtype> lsolve_skipz_b;
     Mtx2Matrix(b_mtx, lsolve_skipz_b);
-//    print_matrix(lsolve_skipz_b);
-
 
     //Solving
     cout << " ############ Solution-SkipZero ############ \n" << endl;
@@ -53,7 +44,6 @@ int main() {
     end = std::chrono::high_resolution_clock::now();
     auto lsolve_skipz_time = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
 
-//    print_array(lsolve_skipz_b.data, lsolve_skipz_b.n_row);
     //verifying with standard
     bool areEqual_skipz = isEqual(lsolve_b.data, lsolve_skipz_b.data, lsolve_b.n_row);
     if(!areEqual_skipz) cout<<"lsolve_skipzero answer not correct"<<endl;
@@ -61,14 +51,11 @@ int main() {
 
 
     /*
-      *
       * Solving Using the lsolve where relevant columns are chosen using graph traversal
-      *
       * */
     // Reading B vector
     COO_ptr<matrix_dtype> lsolve_graph_b;
     Mtx2Matrix(b_mtx, lsolve_graph_b);
-//    print_matrix(lsolve_graph_b);
 
     COO_vec<matrix_dtype> lsolve_graph_bVec;
     Mtx2vec(b_mtx, lsolve_graph_bVec);
@@ -82,7 +69,6 @@ int main() {
     auto graph_trav_time = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
 
     cout << "Number of Nodes to visit: "<<visited_col_size<<endl;
-//    print_array_int(visited_cols_arr, visited_col_size);
 
     //Solving
     cout << " ############ Solution-Graph ############ \n" << endl;
@@ -91,7 +77,6 @@ int main() {
     end = std::chrono::high_resolution_clock::now();
     auto lsolve_graph_time = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
 
-//    print_array(lsolve_graph_b.data, lsolve_graph_b.n_row);
     //verifying with standard
     bool areEqual_graph = isEqual(lsolve_b.data, lsolve_graph_b.data, lsolve_b.n_row);
     if(!areEqual_graph) cout<<"lsolve_graph answer not correct"<<endl;
@@ -146,9 +131,7 @@ int main() {
 
 
     /*
-      *
       * Parallel - lsolve graph
-      *
       * */
     // Reading B vector
     COO_ptr<matrix_dtype> lsolve_graph_II_b;
@@ -157,11 +140,10 @@ int main() {
     //Solving
     cout << " ############ Solution-Graph ############ \n" << endl;
     start = std::chrono::high_resolution_clock::now();
-    lsolve_graph(L_csc, lsolve_graph_II_b.data, visited_cols_arr, visited_col_size); //lsolve where zeros in b are skipped
+    lsolve_graph_II(L_csc, lsolve_graph_II_b.data, visited_cols_arr, visited_col_size); //lsolve where zeros in b are skipped
     end = std::chrono::high_resolution_clock::now();
     auto lsolve_graph_II_time = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
 
-//    print_array(lsolve_graph_b.data, lsolve_graph_b.n_row);
     //verifying with standard
     bool areEqual_graph_II = isEqual(lsolve_b.data, lsolve_graph_b.data, lsolve_b.n_row);
     if(!areEqual_graph_II) cout<<"lsolve_graph-parallel answer not correct"<<endl;

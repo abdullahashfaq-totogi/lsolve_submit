@@ -14,7 +14,6 @@ using namespace std;
 
 int lsolve(CSC<matrix_dtype> L_csc, matrix_dtype *& x);
 int lsolve_skipZero(CSC<matrix_dtype> L_csc, matrix_dtype *& x);
-
 void find_adj_nodes(CSC<matrix_dtype> L_csc, COO_vec<matrix_dtype> b_matrix, int*& visited_cols_arr, int& visited_col_size);
 int lsolve_graph(CSC<matrix_dtype> L_csc, matrix_dtype *& x, int* visited_cols, int num_nodes);
 

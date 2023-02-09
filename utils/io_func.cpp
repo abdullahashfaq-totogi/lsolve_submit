@@ -4,6 +4,12 @@
 
 #include "io_func.h"
 
+/* Description:
+ * prints matrix provided in COO format where data is stored in 2D array
+ *
+ * Inputs:
+ * matrix: matrix to print
+ * */
 void print_matrix(COO_ptr<matrix_dtype>& matrix){
     cout << endl << " --- Printing Matrix --- " << endl;
     for (int i = 0; i < matrix.n_row; i++) {
@@ -14,6 +20,14 @@ void print_matrix(COO_ptr<matrix_dtype>& matrix){
     }
 }
 
+
+/* Description:
+ * prints array
+ *
+ * Inputs:
+ * x: array to print
+ * n: array size
+ * */
 void print_array(matrix_dtype* x, int n) {
     for (int i = 0; i < n; i++){
         if (x[i] != x[i]) cout << 0; //For nan
@@ -24,6 +38,16 @@ void print_array(matrix_dtype* x, int n) {
 
 }
 
+
+/* Description:
+ * prints array
+ *
+ * Inputs:
+ * x: array to print
+ * n: array size
+ *
+ * Note: I know this can be template but needed to move this to .h file to make it work.
+ * */
 void print_array_int(int* x, int n) {
     for (int i = 0; i < n; i++){
         if (x[i] != x[i]) cout << 0; //For nan
@@ -35,6 +59,15 @@ void print_array_int(int* x, int n) {
 }
 
 
+/* Description:
+ * Reads .mtx file into COO format structure
+ *
+ * Inputs:
+ * mtx_filename: path to file to be read
+ *
+ * Output:
+ * matrix: The destination COO struct to which matrix is saved
+ * */
 void Mtx2vec(string mtx_filename, COO_vec<matrix_dtype>& matrix) {
     ifstream file(mtx_filename);
 
@@ -65,6 +98,17 @@ void Mtx2vec(string mtx_filename, COO_vec<matrix_dtype>& matrix) {
 }
 
 
+/* Description:
+ * Reads .mtx file into structure where data array is 2D
+ *
+ * Inputs:
+ * mtx_filename: path to file to be read
+ *
+ * Output:
+ * matrix: The destination struct to which matrix is saved.
+ *
+ * Drawback: If matrix is large, this function consumes a lot of memory
+ * */
 void Mtx2Matrix(string mtx_filename, COO_ptr<matrix_dtype>& matrix) {
     ifstream file(mtx_filename);
     if(file.fail()){
@@ -102,7 +146,15 @@ void Mtx2Matrix(string mtx_filename, COO_ptr<matrix_dtype>& matrix) {
 }
 
 
-
+/* Description:
+ * Reads .mtx file into COO format structure
+ *
+ * Inputs:
+ * mtx_filename: path to file to be read
+ *
+ * Output:
+ * matrix: The destination COO struct to which matrix is saved
+ * */
 void Mtx2Matrix_vec(string mtx_filename, COO_vec<matrix_dtype>& matrix) {
     ifstream file(mtx_filename);
 
@@ -126,7 +178,7 @@ void Mtx2Matrix_vec(string mtx_filename, COO_vec<matrix_dtype>& matrix) {
         if (col > row) continue; //skip the upper triangle part of matrix
 
         matrix.data.push_back(make_tuple(row - 1, col - 1, data));
-        if (row == col && data != 0) diagonalVals++;
+        if (row == col && data != 0) diagonalVals++; //Counting diagonal values to find any missing
 
         if (l != 0 && l % 100000 == 0) cout << l << " ";
     }
@@ -143,6 +195,15 @@ void Mtx2Matrix_vec(string mtx_filename, COO_vec<matrix_dtype>& matrix) {
 }
 
 
+/* Description:
+ *  Converts a matrix in COO format to CSC format
+ *
+ * Inputs:
+ * matrix: COO formatted matrix where data is stored in a vector
+ *
+ * Outputs:
+ * L_csc: destination matrix. It contains Lp,Li,Lx
+ * */
 void Matrix2CSC_vec(COO_vec<matrix_dtype>& matrix, CSC<matrix_dtype>& L_csc) {
     int Lp_counter = 0;
     int Lx_counter = 0;
@@ -154,7 +215,7 @@ void Matrix2CSC_vec(COO_vec<matrix_dtype>& matrix, CSC<matrix_dtype>& L_csc) {
     int new_col = 0;
     for (int i = 0; i < matrix.data.size(); ++i) {
         new_col = get<1>(matrix.data[i]);
-        if (new_col != prev_col) {
+        if (new_col != prev_col) { //If new column, then add to column array
             L_csc.Lp[Lp_counter] = Lx_counter;
             prev_col = new_col;
             Lp_counter++;
@@ -166,12 +227,22 @@ void Matrix2CSC_vec(COO_vec<matrix_dtype>& matrix, CSC<matrix_dtype>& L_csc) {
 
     }
 
-    L_csc.Lp_size = Lp_counter+1;
+    L_csc.Lp_size = Lp_counter+1; //Add 1 to size of column array for traversal to work correctly
 
 }
 
 
-
+/* Description:
+ * Reads file in .mtx format and converts to COO. Then converts COO to CSC.
+ *
+ * Inputs:
+ * mtx_filename: .mtx file to read
+ * displayM: print the matrix in COO format
+ * displayCSC: print matrix in CSC format
+ *
+ * Outputs:
+ * L_csc: matrix in CSC format
+ * */
 void Mtx2CSC_vec(string mtx_filename, CSC<matrix_dtype>& L_csc, bool displayM, bool displayCSC) {
     L_csc.n_row, L_csc.n_col, L_csc.n_nonzero = 0;
 

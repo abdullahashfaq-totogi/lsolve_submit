@@ -10,18 +10,23 @@
 #include <tuple>
 using namespace std;
 
+
+/*
+ * Storage for matrix in CSC format
+ * */
 template <typename Lx_type>
 struct CSC{
-    int* Lp;
-    int* Li;
-    Lx_type* Lx;
-    int n_row, n_col, n_nonzero, Lp_size;
+    int* Lp; // column indices
+    int* Li; // row indices
+    Lx_type* Lx; // array containing data
+    int n_row, n_col, n_nonzero, Lp_size; // number of row, columns, nonZeros and Lp_size=column array size
 
     CSC(){
         Lp,Li,Lx=NULL;
         n_row,n_col, n_nonzero, Lp_size=0;
     }
 
+    //Assign arrays
     void set(int*& Lp_in, int*& Li_in, Lx_type*& Lx_in, int n_row_in, int n_col_in, int n_nonzero_in, int Lp_size_in){
         Lp = Lp_in;
         Li = Li_in;
@@ -32,6 +37,7 @@ struct CSC{
         Lp_size = Lp_size_in;
     }
 
+    //Delete arrays
     void eliminate(){
         delete[] Li;
         delete[] Lx;
@@ -39,6 +45,7 @@ struct CSC{
         n_row, n_col, n_nonzero, Lp_size=0;
     }
 
+    //Print arrays
     void print(){
         cout << endl << " --- Printing Matrix in CSC format --- " << endl;
 
@@ -64,7 +71,9 @@ struct CSC{
 
 };
 
-
+/*
+ * Storage for matrix in COO format and data is in a vector
+ * */
 template <typename dtype>
 struct COO_vec{
     int n_row, n_col, n_nonzero;
@@ -82,7 +91,9 @@ struct COO_vec{
 
 };
 
-
+/*
+ * Storage for matrix in COO format and data is in an array
+ * */
 template <typename dtype>
 struct COO_ptr{
     int n_row, n_col, n_nonzero;
