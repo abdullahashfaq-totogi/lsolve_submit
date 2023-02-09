@@ -131,7 +131,7 @@ int lsolve_II(CSC<matrix_dtype> L_csc, matrix_dtype *& x){
     {
         x[j] /= L_csc.Lx[L_csc.Lp[j]];
 
-#pragma omp parallel num_threads(8)
+#pragma omp parallel //shared(x) num_threads(NUM_THREADS)
         {
 #pragma omp for
             for (p = L_csc.Lp[j] + 1; p < L_csc.Lp[j + 1]; p++) {
@@ -161,7 +161,7 @@ int lsolve_skipZero_II(CSC<matrix_dtype> L_csc, matrix_dtype *& x) {
         if (x[j] == 0) continue;
 
         x[j] /= L_csc.Lx[L_csc.Lp[j]];
-#pragma omp parallel shared(Lp,Lx,Li,x) num_threads(8)
+#pragma omp parallel //shared(x) num_threads(NUM_THREADS)
         {
 #pragma omp for
             for (p = L_csc.Lp[j] + 1; p < L_csc.Lp[j + 1]; p++)
@@ -197,7 +197,7 @@ int lsolve_graph_II(CSC<matrix_dtype> L_csc, matrix_dtype *& x, int* visited_col
         if (x[visited_cols[j]] == 0) continue;
 
         x[visited_cols[j]] /= L_csc.Lx[L_csc.Lp[visited_cols[j]]];
-#pragma omp parallel shared(Lp,Lx,Li,x) num_threads(8)
+#pragma omp parallel //shared(x) num_threads(NUM_THREADS)
         {
 #pragma omp for
             for (p = L_csc.Lp[visited_cols[j]] + 1; p < L_csc.Lp[visited_cols[j] + 1]; p++) {

@@ -8,6 +8,8 @@
 
 typedef double matrix_dtype;
 
+#define NUM_THREADS 8
+
 // Lx = b
 //#define L_matrix_path "../dummy_data/ab_m1.mtx";
 //#define b_matrix_path "../dummy_data/b_for_ab_m1_sparse.mtx";
