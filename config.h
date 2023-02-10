@@ -5,11 +5,13 @@
 #ifndef LSOLVE_SUBMIT_CONFIG_H
 #define LSOLVE_SUBMIT_CONFIG_H
 
-
+// Data type of the matrices
 typedef double matrix_dtype;
 
+// Number of threads to use for OMP
 #define NUM_THREADS 8
 
+// Input Matrices
 // Lx = b
 //#define L_matrix_path "../dummy_data/ab_m1.mtx";
 //#define b_matrix_path "../dummy_data/b_for_ab_m1_sparse.mtx";
